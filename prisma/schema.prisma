@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Listado de modelos
+
+model Usuarios {
+  id                    Int                     @id @default(autoincrement())
+  usuario               String                  @unique @db.VarChar(30)
+  apellido              String                  @db.VarChar(50)
+  nombre                String                  @db.VarChar(50)
+  dni                   String                  @db.VarChar(30)
+  password              String
+  email                 String                  @db.VarChar(50)
+  role                  String?                 @default("ADMIN_ROLE")
+  activo                Boolean?                @default(true)
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  permisos              UsuariosPermisos[]
+}
+
+model UsuariosPermisos {
+  id        Int       @id @default(autoincrement())
+  alcance   String    @db.VarChar(50)
+  permiso   String    @db.VarChar(50)
+  usuarioId Int
+  usuario   Usuarios  @relation(fields: [usuarioId], references: [id])
+  activo    Boolean?
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
+
+
+
+
